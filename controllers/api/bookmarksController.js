@@ -5,7 +5,9 @@ module.exports = {
     create,
     index,
     update,
-    destory
+    destory,
+    jsonBookmark,
+    jsonBookmarks
 }
 
 
@@ -13,11 +15,15 @@ function jsonBookmarks (_, res) {
     res.json(res.local.data.bookmarks)
 }
 
+function jsonBookmark (_, res) {
+    res.json(res.local.data.bookmark)
+}
+
 //Create
 async function create(req, res, next){
     try {
-        const bookmarks = await Bookmark.create(req.body)
-        res.locals.data.bookmarks = bookmarks
+        const bookmark = await Bookmark.create(req.body)
+        res.locals.data.bookmarks = bookmark
         next()
     } catch (error) {
         res.status(400).json({msg: error.message})
@@ -40,8 +46,8 @@ async function index(req, res, next) {
 
 async function update(req, res, next) {
     try {
-        const bookmarks = await Bookmark.findByIdAndUpdate(req.params.id, req.body, {new: true})
-        res.locals.data.bookmarks = bookmarks
+        const bookmark = await Bookmark.findByIdAndUpdate(req.params.id, req.body, {new: true})
+        res.locals.data.bookmark = bookmark
     } catch (error) {
         res.status(400).json({msg: error.message})
     }
@@ -52,8 +58,8 @@ async function update(req, res, next) {
 
 async function destory(req, res, next) {
     try {
-        const bookmarks = await Bookmark.findByIdAndUpdate(req.params.id)
-        res.locals.data.bookmarks = bookmarks
+        const bookmark = await Bookmark.findByIdAndUpdate(req.params.id)
+        res.locals.data.bookmark = bookmark
         next()
     } catch (error) {
         res.status(400).json({msg: error.message})

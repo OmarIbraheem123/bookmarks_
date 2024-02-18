@@ -1,93 +1,93 @@
 import { useState, useEffect } from 'react'
-import TodoList from './components/TodoList/TodoList'
+import Nav from './components/Nav/Nav'
 import styles from './App.module.scss'
+import Bookmark from '../models/bookmarks'
+import { application } from 'express'
 
 
 export default function App(){
-    const [todos, setTodos] = useState([])
-    const [completedTodos, setCompletedTodos] = useState([])
+    const [bookmark, setbookmark] = useState([])
+    const [bookmarks, setbookmarks] = useState([])
     const [newTodo, setNewTodo] = useState({
         title: '',
-        completed: false
+        url: ''
     })
 
-    //createTodos
-    const createTodo = async () => {
-        const body = {...newTodo}
+    //createBookmark
+    const createBookmark = async () => {
         try {
-            const response = await fetch('/api/todos', {
+            const response = await fetch('/api/bookmarks', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(body)
+                body: JSON.stringify({...bookmark})
             })
-            const createdTodo = await response.json()
-            const todosCopy = [createdTodo,...todos]
-            setTodos(todosCopy)
-            setNewTodo({
+            const data = await response.json()
+            setBookmarks([data,...bookmarks])
+            setBookmark({
                 title: '',
-                completed: false
+                url: ''
             })
         } catch (error) {   
             console.error(error)
         }
     }
-    //deleteTodos
-    const deleteTodo = async (id) => {
+    //listbookmarkbyuser
+    const listBookmarksByUser = async () => {
         try {
-            const index = completedTodos.findIndex((todo) => todo._id === id)
-            const completedTodosCopy = [...completedTodos]
-            const response = await fetch(`/api/todos/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            await response.json()
-            completedTodosCopy.splice(index, 1)
-            setCompletedTodos(completedTodosCopy)
+            const response = await fetch('/api/users/bookmarks')
+            const data = await response.json()
+            setBookmarks(data)
         } catch (error) {
             console.error(error)
         }
     }
-    //moveToCompleted
-    const moveToCompleted = async (id) => {
+
+
+
+
+    //deleteBookmark
+    const deleteBookmark = async (id) => {
+            try {
+                const response = await fetch(`/api/bookmarks/${id}`, { 
+                    method: 'DELETE',
+                    headers:{ 
+                        'Content-Type': 'application/json'
+                    }
+                })
+                const data = await response.json()
+                const bookmarkarksCopy = [...bookmark]
+                const index = bookmarkarksCopy.findIndex(bookmark => id === bookmark.id)
+                bookmarkarksCopy.splice(index, 1 )
+                setBookmark(bookmarkarksCopy)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+    //updateBookmark
+    const updateBookmark = async (id, updatedData) => {
         try {
-            const index = todos.findIndex((todo) => todo._id === id)
-            const todosCopy = [...todos]
-            const subject = todosCopy[index]
-            subject.completed = true 
-            const response = await fetch(`/api/todos/${id}`, {
+            const response = await fetch(`/api/bookmarks/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(subject)
+                body: JSON.stringify(updatedData)
             })
-            const updatedTodo = await response.json()
-            const completedTDsCopy = [updatedTodo, ...completedTodos]
-            setCompletedTodos(completedTDsCopy)
-            todosCopy.splice(index, 1)
-            setTodos(todosCopy)
+            const data = await response.json()
+            const bookmarkarksCopy = [...bookmark]
+            const index = bookmarkarksCopy.findIndex(bookmark => id === bookmark.id)
+            bookmarkarksCopy[index] = {...bookmarkarksCopy[index], ...updatedData} 
+            setBookmark(bookmarkarksCopy)
         } catch (error) {
             console.error(error)
         }
     }
-    //getTodos
-    const getTodos = async () => {
-        try{
-            const response = await fetch('/api/todos')
-            const foundTodos = await response.json()
-            setTodos(foundTodos.reverse())
-            console.log('hey')
-            const responseTwo = await fetch('/api/todos/completed')
-            const foundCompletedTodos = await responseTwo.json()
-            setCompletedTodos(foundCompletedTodos.reverse())
-        } catch(error){
-            console.error(error)
-        }
-    }
+ 
+ 
+
     useEffect(() => {
         getTodos()
     }, [])
