@@ -89,8 +89,9 @@ export default function App(){
  
 
     useEffect(() => {
-        getTodos()
+        listBookmarksByUser()
     }, [])
+    
     return(
         <>
 			
