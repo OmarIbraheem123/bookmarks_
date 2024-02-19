@@ -1,8 +1,10 @@
 import {StrictMode} from "react";
+// import './style.css';
 import { createRoot } from "react-dom/client";
 import App from './App';
 const root = createRoot(document.getElementById("app"))
 root.render(
     <StrictMode>
             <App/>
-    </StrictMode>)
+    </StrictMode>
+    )

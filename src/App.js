@@ -1,46 +1,58 @@
 import { useState, useEffect } from 'react'
-import Nav from './components/Nav/Nav'
-import styles from './App.module.scss'
-import Bookmark from '../models/bookmarks'
-import { application } from 'express'
+// import Nav from './components/Nav/Nav'
+// import styles from './App.module.scss'
+// import Bookmark from '../models/bookmarks'
+// import { application } from 'express'
 
 
 export default function App(){
-    const [bookmark, setbookmark] = useState([])
+
+    const handleChange = (event) => {
+        setbookmark({ ...bookmark, [event.target.name]: event.target.value})
+    }
+
+    const [bookmark, setbookmark] = useState({
+     title: '',
+     url: ''
+})
     const [bookmarks, setbookmarks] = useState([])
-    const [newTodo, setNewTodo] = useState({
-        title: '',
-        url: ''
-    })
+      
 
     //createBookmark
-    const createBookmark = async () => {
+    const create = async () => {
         try {
             const response = await fetch('/api/bookmarks', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({...bookmark})
+                body: JSON.stringify({bookmark})
             })
             const data = await response.json()
-            setBookmarks([data,...bookmarks])
+            setBookmarks([data, ...bookmarks])
+        } catch (error) {   
+            console.error(error)
+        } finally {
             setBookmark({
                 title: '',
                 url: ''
             })
-        } catch (error) {   
-            console.error(error)
         }
     }
     //listbookmarkbyuser
     const listBookmarksByUser = async () => {
         try {
-            const response = await fetch('/api/users/bookmarks')
+            const response = await fetch('/api/bookmarks', {
+                method:'GET',
+                headers:{
+                    'Content-Type': 'application/json',
+                }
+               
+            })
             const data = await response.json()
             setBookmarks(data)
         } catch (error) {
-            console.error(error)
+            // console.error(error)
         }
     }
 
@@ -48,7 +60,7 @@ export default function App(){
 
 
     //deleteBookmark
-    const deleteBookmark = async (id) => {
+    const destory= async (id) => {
             try {
                 const response = await fetch(`/api/bookmarks/${id}`, { 
                     method: 'DELETE',
@@ -67,7 +79,7 @@ export default function App(){
         }
 
     //updateBookmark
-    const updateBookmark = async (id, updatedData) => {
+    const update = async (id, updatedData) => {
         try {
             const response = await fetch(`/api/bookmarks/${id}`, {
                 method: 'PUT',
@@ -94,20 +106,22 @@ export default function App(){
     
     return(
         <>
-			
-            <div className={styles.banner}>
-                <h1>The World Famous Big Poppa Code React Starter Kit</h1>
-              <img src='https://i.imgur.com/5WXigZL.jpg'/>
-            </div>
-            <TodoList
-            newTodo={newTodo}
-            setNewTodo={setNewTodo}
-            createTodo={createTodo}
-            todos={todos}
-            moveToCompleted={moveToCompleted}
-            completedTodos={completedTodos}
-            deleteTodo={deleteTodo}
-            />
+        <h2>Create Bookmark</h2>
+        <form>
+
+            <input type ="text" value={bookmark.title} name="title" onChange={handleChange}placeholder='Title'></input>
+            <input type ="text" value={bookmark.url} name="url" onChange={handleChange}placeholder='URL'></input>
+            <input type ="submit" value="Create Bookmark"/>
+
+        </form>
+
+		{bookmarks.length ? bookmarks.map(item => (
+            <li key ={item._id}>
+                <h4>{item.title}</h4>
+                <a href = {item.url} target="_blank"> {item.url}</a>
+            </li>
+        )): <>No BookMarks</>}	
+          
         </>
     )
 }

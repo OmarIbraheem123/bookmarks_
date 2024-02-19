@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 
 
 const bookmarkSchema = new mongoose.Schema({
-    title: {type: String},
-    url: {type: String}
+    title: {type: String, require: true},
+    url: {type: String, require: true}
 })
 
 

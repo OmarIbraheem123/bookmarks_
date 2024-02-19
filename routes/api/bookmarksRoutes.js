@@ -1,14 +1,14 @@
 const express = require('express')
 const router = express.Router()
-const bookmarkCtrl = require('../controller/bookmarks')
+const bookmarkCtrl = require('../../controllers/api/bookmarks')
 
 //Index
-router.get('/:id', bookmarkCtrl.index, bookmarkCtrl.jsonBookmarks)
+router.get('/', bookmarkCtrl.index, bookmarkCtrl.jsonBookmark)
 //Create
-router.post('/', bookmarkCtrl.create, bookmarkCtrl.jsonBookmarks)
+router.post('/', bookmarkCtrl.create, bookmarkCtrl.jsonBookmark)
 //Delete
-router.delete('/:id', bookmarkCtrl.destory, bookmarkCtrl.jsonBookmarks)
+router.delete('/:id', bookmarkCtrl.destory, bookmarkCtrl.jsonBookmark)
 //Update
-router.put('/:id', bookmarkCtrl.update, bookmarkCtrl.jsonBookmarks)
+router.put('/:id', bookmarkCtrl.update, bookmarkCtrl.jsonBookmark)
 
 module.exports = router
