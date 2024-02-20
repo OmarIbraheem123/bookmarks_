@@ -1,11 +1,11 @@
 import {useRef, useState} from 'react'
+// import  './Bookmark.module.scss'
 
-
-export default function Bookmark (
+export default function Bookmark ({
     bookmark,
     updateBookmark,
     deleteBookmark
-) {
+}) {
     const [showInput, setShowInput] = useState(false)
     const inputRef = useRef(null)
     return(

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import CreateBookmark from './components/CreateBookmark/CreateBookmark'
 import BookmarkList from './components/BookmarkList/BookmarkList'
-// import styles from './App.module.scss'
+
 
 
 
@@ -52,7 +52,7 @@ export default function App(){
             const data = await response.json()
             setBookmarks(data)
         } catch (error) {
-            // console.error(error)
+            console.error(error)
         }
     }
 
