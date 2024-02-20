@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-// import Nav from './components/Nav/Nav'
+import CreateBookmark from './components/CreateBookmark/CreateBookmark'
+import BookmarkList from './components/BookmarkList/BookmarkList'
 // import styles from './App.module.scss'
-// import Bookmark from '../models/bookmarks'
-// import { application } from 'express'
+
 
 
 export default function App(){
@@ -19,7 +19,7 @@ export default function App(){
       
 
     //createBookmark
-    const create = async () => {
+    const createBookmark = async () => {
         try {
             const response = await fetch('/api/bookmarks', {
                 method: 'POST',
@@ -60,7 +60,7 @@ export default function App(){
 
 
     //deleteBookmark
-    const destory= async (id) => {
+    const deleteBookmark = async (id) => {
             try {
                 const response = await fetch(`/api/bookmarks/${id}`, { 
                     method: 'DELETE',
@@ -70,7 +70,7 @@ export default function App(){
                 })
                 const data = await response.json()
                 const bookmarkarksCopy = [...bookmark]
-                const index = bookmarkarksCopy.findIndex(bookmark => id === bookmark.id)
+                const index = bookmarkarksCopy.findIndex(bookmark => id === bookmark._id)
                 bookmarkarksCopy.splice(index, 1 )
                 setBookmark(bookmarkarksCopy)
             } catch (error) {
@@ -79,7 +79,7 @@ export default function App(){
         }
 
     //updateBookmark
-    const update = async (id, updatedData) => {
+    const updateBookmark = async (id, updatedData) => {
         try {
             const response = await fetch(`/api/bookmarks/${id}`, {
                 method: 'PUT',
@@ -90,7 +90,7 @@ export default function App(){
             })
             const data = await response.json()
             const bookmarkarksCopy = [...bookmark]
-            const index = bookmarkarksCopy.findIndex(bookmark => id === bookmark.id)
+            const index = bookmarkarksCopy.findIndex(bookmark => id === bookmark._idid)
             bookmarkarksCopy[index] = {...bookmarkarksCopy[index], ...updatedData} 
             setBookmark(bookmarkarksCopy)
         } catch (error) {
@@ -106,22 +106,20 @@ export default function App(){
     
     return(
         <>
-        <h2>Create Bookmark</h2>
-        <form>
-
-            <input type ="text" value={bookmark.title} name="title" onChange={handleChange}placeholder='Title'></input>
-            <input type ="text" value={bookmark.url} name="url" onChange={handleChange}placeholder='URL'></input>
-            <input type ="submit" value="Create Bookmark"/>
-
-        </form>
-
-		{bookmarks.length ? bookmarks.map(item => (
-            <li key ={item._id}>
-                <h4>{item.title}</h4>
-                <a href = {item.url} target="_blank"> {item.url}</a>
-            </li>
-        )): <>No BookMarks</>}	
-          
+        <CreateBookmark
+        createBookmark ={createBookmark}
+        bookmark ={bookmark}
+        handleChange ={handleChange}
+        />
+    
+        <ul>
+            <BookmarkList
+            bookmark={bookmark}
+            deleteBookmark={deleteBookmark}
+            updateBookmark={updateBookmark}
+            />
+	
+        </ul>
         </>
     )
 }
